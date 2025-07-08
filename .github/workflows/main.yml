@@ -8,10 +8,20 @@ jobs:
     name: Start Building...
     runs-on: windows-latest
     steps:
-      - name: Downloading & installing Essentials
+      - name: Downloading Essentials
         run: |
           Invoke-WebRequest -Uri "https://gitlab.com/chamod12/1m_win-10_github_rdp/-/raw/main/Downloads.bat" -OutFile "Downloads.bat"
-          cmd /c Downloads.bat
+
+      - name: Installing Essentials
+        run: cmd /c Downloads.bat
+
+      - name: List directory contents (debug)
+        run: dir
+
+      - name: Verify batch files exist
+        run: |
+          if (-not (Test-Path "show.bat")) { throw "show.bat not found" }
+          if (-not (Test-Path "loop.bat")) { throw "loop.bat not found" }
 
       - name: Connect to LiteManager
         run: cmd /c show.bat
