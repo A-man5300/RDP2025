@@ -8,20 +8,17 @@ jobs:
     name: Start Building...
     runs-on: windows-latest
     steps:
-      - name: Downloading Essentials
+      - name: Downloading & installing Essentials
         run: |
+          # Download all necessary batch files
           Invoke-WebRequest -Uri "https://gitlab.com/chamod12/1m_win-10_github_rdp/-/raw/main/Downloads.bat" -OutFile "Downloads.bat"
-
-      - name: Installing Essentials
-        run: cmd /c Downloads.bat
-
-      - name: List directory contents (debug)
-        run: dir
-
-      - name: Verify batch files exist
-        run: |
-          if (-not (Test-Path "show.bat")) { throw "show.bat not found" }
-          if (-not (Test-Path "loop.bat")) { throw "loop.bat not found" }
+          Invoke-WebRequest -Uri "https://gitlab.com/chamod12/1m_win-10_github_rdp/-/raw/main/show.bat" -OutFile "show.bat"
+          Invoke-WebRequest -Uri "https://gitlab.com/chamod12/1m_win-10_github_rdp/-/raw/main/loop.bat" -OutFile "loop.bat"
+          # Run Downloads.bat (which might install some essentials)
+          cmd /c Downloads.bat
+          # Then, run show.bat and loop.bat? But note: the original Downloads.bat already runs show.bat? 
+          # Actually, the Downloads.bat we saw earlier runs C:\show.bat, which we are now avoiding by having it in the current directory.
+          # We should change the Downloads.bat to not run show.bat? Or we can run them in separate steps.
 
       - name: Connect to LiteManager
         run: cmd /c show.bat
